@@ -37,11 +37,14 @@ if (!is_valid_url($url))
 
 $db = new PDO('sqlite:sqlite.db');
 $rst = $db->query("Select max(id) from urls");
+$next_id = (int) $rst->fetchColumn();
+$next_id = $next_id + 1;
 
 $next_id = (int) $rst->fetchColumn() ? $rst->fetchColumn()+1 : 1; 
 $short_code = (string) dechex($next_id);
 
 $rst = $db->prepare("Insert into urls(id, short_code, long_url) values(:id, :short_code, :long_url ) ");
+
 $rst->execute([
     ':id' => $next_id,
     ':short_code' => $short_code,
